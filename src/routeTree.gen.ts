@@ -12,6 +12,8 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as VerifiedRouteImport } from './routes/verified'
 import { Route as SmartMatchingRouteImport } from './routes/smart-matching'
 import { Route as MessagingRouteImport } from './routes/messaging'
+import { Route as FraudRouteImport } from './routes/fraud'
+import { Route as FiltersRouteImport } from './routes/filters'
 import { Route as IndexRouteImport } from './routes/index'
 
 const VerifiedRoute = VerifiedRouteImport.update({
@@ -29,6 +31,16 @@ const MessagingRoute = MessagingRouteImport.update({
   path: '/messaging',
   getParentRoute: () => rootRouteImport,
 } as any)
+const FraudRoute = FraudRouteImport.update({
+  id: '/fraud',
+  path: '/fraud',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FiltersRoute = FiltersRouteImport.update({
+  id: '/filters',
+  path: '/filters',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -37,12 +49,16 @@ const IndexRoute = IndexRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/filters': typeof FiltersRoute
+  '/fraud': typeof FraudRoute
   '/messaging': typeof MessagingRoute
   '/smart-matching': typeof SmartMatchingRoute
   '/verified': typeof VerifiedRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/filters': typeof FiltersRoute
+  '/fraud': typeof FraudRoute
   '/messaging': typeof MessagingRoute
   '/smart-matching': typeof SmartMatchingRoute
   '/verified': typeof VerifiedRoute
@@ -50,20 +66,43 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/filters': typeof FiltersRoute
+  '/fraud': typeof FraudRoute
   '/messaging': typeof MessagingRoute
   '/smart-matching': typeof SmartMatchingRoute
   '/verified': typeof VerifiedRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/messaging' | '/smart-matching' | '/verified'
+  fullPaths:
+    | '/'
+    | '/filters'
+    | '/fraud'
+    | '/messaging'
+    | '/smart-matching'
+    | '/verified'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/messaging' | '/smart-matching' | '/verified'
-  id: '__root__' | '/' | '/messaging' | '/smart-matching' | '/verified'
+  to:
+    | '/'
+    | '/filters'
+    | '/fraud'
+    | '/messaging'
+    | '/smart-matching'
+    | '/verified'
+  id:
+    | '__root__'
+    | '/'
+    | '/filters'
+    | '/fraud'
+    | '/messaging'
+    | '/smart-matching'
+    | '/verified'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  FiltersRoute: typeof FiltersRoute
+  FraudRoute: typeof FraudRoute
   MessagingRoute: typeof MessagingRoute
   SmartMatchingRoute: typeof SmartMatchingRoute
   VerifiedRoute: typeof VerifiedRoute
@@ -92,6 +131,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MessagingRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/fraud': {
+      id: '/fraud'
+      path: '/fraud'
+      fullPath: '/fraud'
+      preLoaderRoute: typeof FraudRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/filters': {
+      id: '/filters'
+      path: '/filters'
+      fullPath: '/filters'
+      preLoaderRoute: typeof FiltersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -104,6 +157,8 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  FiltersRoute: FiltersRoute,
+  FraudRoute: FraudRoute,
   MessagingRoute: MessagingRoute,
   SmartMatchingRoute: SmartMatchingRoute,
   VerifiedRoute: VerifiedRoute,

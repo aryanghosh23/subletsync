@@ -12,15 +12,21 @@ export function SiteNav() {
             SubletSync
           </span>
         </Link>
-        <div className="hidden md:flex items-center gap-8 text-sm text-muted-foreground">
+        <div className="hidden md:flex items-center gap-7 text-sm text-muted-foreground">
           <Link to="/smart-matching" activeProps={{ className: "text-foreground" }} className="hover:text-foreground transition-colors">
-            Smart matching
+            Matching
           </Link>
           <Link to="/verified" activeProps={{ className: "text-foreground" }} className="hover:text-foreground transition-colors">
-            Verified listings
+            Verified
+          </Link>
+          <Link to="/filters" activeProps={{ className: "text-foreground" }} className="hover:text-foreground transition-colors">
+            Filters
           </Link>
           <Link to="/messaging" activeProps={{ className: "text-foreground" }} className="hover:text-foreground transition-colors">
             Messaging
+          </Link>
+          <Link to="/fraud" activeProps={{ className: "text-foreground" }} className="hover:text-foreground transition-colors">
+            Trust
           </Link>
         </div>
         <div className="flex items-center gap-3">
