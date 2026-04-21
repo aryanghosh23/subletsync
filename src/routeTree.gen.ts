@@ -9,8 +9,26 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as VerifiedRouteImport } from './routes/verified'
+import { Route as SmartMatchingRouteImport } from './routes/smart-matching'
+import { Route as MessagingRouteImport } from './routes/messaging'
 import { Route as IndexRouteImport } from './routes/index'
 
+const VerifiedRoute = VerifiedRouteImport.update({
+  id: '/verified',
+  path: '/verified',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SmartMatchingRoute = SmartMatchingRouteImport.update({
+  id: '/smart-matching',
+  path: '/smart-matching',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MessagingRoute = MessagingRouteImport.update({
+  id: '/messaging',
+  path: '/messaging',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -19,28 +37,61 @@ const IndexRoute = IndexRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/messaging': typeof MessagingRoute
+  '/smart-matching': typeof SmartMatchingRoute
+  '/verified': typeof VerifiedRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/messaging': typeof MessagingRoute
+  '/smart-matching': typeof SmartMatchingRoute
+  '/verified': typeof VerifiedRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/messaging': typeof MessagingRoute
+  '/smart-matching': typeof SmartMatchingRoute
+  '/verified': typeof VerifiedRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths: '/' | '/messaging' | '/smart-matching' | '/verified'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to: '/' | '/messaging' | '/smart-matching' | '/verified'
+  id: '__root__' | '/' | '/messaging' | '/smart-matching' | '/verified'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  MessagingRoute: typeof MessagingRoute
+  SmartMatchingRoute: typeof SmartMatchingRoute
+  VerifiedRoute: typeof VerifiedRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/verified': {
+      id: '/verified'
+      path: '/verified'
+      fullPath: '/verified'
+      preLoaderRoute: typeof VerifiedRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/smart-matching': {
+      id: '/smart-matching'
+      path: '/smart-matching'
+      fullPath: '/smart-matching'
+      preLoaderRoute: typeof SmartMatchingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/messaging': {
+      id: '/messaging'
+      path: '/messaging'
+      fullPath: '/messaging'
+      preLoaderRoute: typeof MessagingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -53,6 +104,9 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  MessagingRoute: MessagingRoute,
+  SmartMatchingRoute: SmartMatchingRoute,
+  VerifiedRoute: VerifiedRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
