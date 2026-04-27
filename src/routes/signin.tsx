@@ -41,8 +41,9 @@ function SignIn() {
     <div className="min-h-screen flex flex-col">
       <SiteNav />
 
-      <section className="flex-1 mx-auto max-w-md w-full px-6 pt-16 pb-24">
-        <div className="rounded-3xl bg-card border border-border shadow-[var(--shadow-soft)] p-8 md:p-10">
+      <section className="flex-1 flex items-center justify-center px-6 py-12 md:py-16">
+        <div className="w-full max-w-md">
+          <div className="rounded-3xl bg-card border border-border shadow-[var(--shadow-soft)] p-8 md:p-10">
           {stage === "form" ? (
             <>
               <div className="flex items-center gap-2 mb-6">
@@ -162,15 +163,16 @@ function SignIn() {
               </div>
             </div>
           )}
-        </div>
+          </div>
 
-        <p className="mt-6 text-center text-xs text-muted-foreground">
-          Not at UTD?{" "}
-          <Link to="/" className="underline hover:text-foreground">
-            We're rolling out campus by campus
-          </Link>
-          .
-        </p>
+          <p className="mt-6 text-center text-xs text-muted-foreground">
+            Not at UTD?{" "}
+            <Link to="/" className="underline hover:text-foreground">
+              We're rolling out campus by campus
+            </Link>
+            .
+          </p>
+        </div>
       </section>
 
       <SiteFooter />
