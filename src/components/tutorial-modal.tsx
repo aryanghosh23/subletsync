@@ -63,15 +63,16 @@ export function TutorialModal({ open, onClose }: { open: boolean; onClose: () =>
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-foreground/40 backdrop-blur-sm animate-in fade-in"
+      className="fixed inset-0 z-50 overflow-y-auto bg-foreground/40 backdrop-blur-sm animate-in fade-in"
       onClick={onClose}
       role="dialog"
       aria-modal="true"
     >
-      <div
-        className="relative w-full max-w-lg rounded-3xl bg-card shadow-[var(--shadow-lift)] overflow-hidden"
-        onClick={(e) => e.stopPropagation()}
-      >
+      <div className="min-h-full flex items-center justify-center p-4 py-8">
+        <div
+          className="relative w-full max-w-lg rounded-3xl bg-card shadow-[var(--shadow-lift)] overflow-hidden my-auto"
+          onClick={(e) => e.stopPropagation()}
+        >
         <button
           onClick={onClose}
           aria-label="Close tutorial"
@@ -136,6 +137,7 @@ export function TutorialModal({ open, onClose }: { open: boolean; onClose: () =>
               </svg>
             </button>
           )}
+          </div>
         </div>
       </div>
     </div>
