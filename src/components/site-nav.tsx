@@ -1,6 +1,10 @@
 import { Link } from "@tanstack/react-router";
+import { useState } from "react";
+import { TutorialModal } from "@/components/tutorial-modal";
 
 export function SiteNav() {
+  const [showTutorial, setShowTutorial] = useState(false);
+
   return (
     <header className="sticky top-0 z-40 backdrop-blur-md bg-background/75 border-b border-border/60">
       <nav className="mx-auto max-w-6xl px-6 h-16 flex items-center justify-between">
@@ -30,14 +34,22 @@ export function SiteNav() {
           </Link>
         </div>
         <div className="flex items-center gap-3">
-          <button className="hidden sm:inline-flex text-sm text-muted-foreground hover:text-foreground transition-colors">
+          <Link
+            to="/signin"
+            className="hidden sm:inline-flex text-sm text-muted-foreground hover:text-foreground transition-colors"
+          >
             Sign in
-          </button>
-          <button className="inline-flex items-center rounded-full bg-primary text-primary-foreground px-4 h-9 text-sm font-medium hover:bg-primary/90 transition-colors">
+          </Link>
+          <button
+            type="button"
+            onClick={() => setShowTutorial(true)}
+            className="inline-flex items-center rounded-full bg-primary text-primary-foreground px-4 h-9 text-sm font-medium hover:bg-primary/90 transition-colors"
+          >
             Get started
           </button>
         </div>
       </nav>
+      <TutorialModal open={showTutorial} onClose={() => setShowTutorial(false)} />
     </header>
   );
 }
