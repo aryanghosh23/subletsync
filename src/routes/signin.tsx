@@ -163,15 +163,16 @@ function SignIn() {
               </div>
             </div>
           )}
-        </div>
+          </div>
 
-        <p className="mt-6 text-center text-xs text-muted-foreground">
-          Not at UTD?{" "}
-          <Link to="/" className="underline hover:text-foreground">
-            We're rolling out campus by campus
-          </Link>
-          .
-        </p>
+          <p className="mt-6 text-center text-xs text-muted-foreground">
+            Not at UTD?{" "}
+            <Link to="/" className="underline hover:text-foreground">
+              We're rolling out campus by campus
+            </Link>
+            .
+          </p>
+        </div>
       </section>
 
       <SiteFooter />
