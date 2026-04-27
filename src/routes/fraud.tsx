@@ -178,6 +178,25 @@ function Fraud() {
         </div>
       </section>
 
+      {/* How reports flow */}
+      <section className="mx-auto max-w-6xl px-6 pb-16">
+        <h2 className="font-display text-3xl font-semibold text-foreground mb-8">What happens after you report</h2>
+        <ol className="grid md:grid-cols-4 gap-4">
+          {[
+            ["< 1 min", "Report logged", "Listing is tagged and quietly hidden from new search results."],
+            ["< 1 hr", "AI triage", "We re-run photo dedup, lease checks, and message-pattern scans."],
+            ["< 4 hr", "Human review", "Trust team member opens the case and checks all evidence."],
+            ["Resolved", "You're notified", "Action taken, explained to reporter. Appeal window opens for poster."],
+          ].map(([when, t, d]) => (
+            <li key={t} className="rounded-2xl border border-border bg-card p-5">
+              <p className="text-xs uppercase tracking-wider text-primary font-semibold">{when}</p>
+              <p className="font-display text-xl font-semibold text-foreground mt-2">{t}</p>
+              <p className="text-sm text-muted-foreground mt-1.5 leading-relaxed">{d}</p>
+            </li>
+          ))}
+        </ol>
+      </section>
+
       {/* Report a listing CTA */}
       <section className="mx-auto max-w-6xl px-6 pb-24">
         <div className="rounded-3xl bg-primary-soft p-8 md:p-12 flex flex-col md:flex-row md:items-center md:justify-between gap-6">
@@ -188,6 +207,13 @@ function Fraud() {
             <p className="text-muted-foreground mt-2">
               One tap from any listing. Our team reviews every report — usually within 4 hours.
             </p>
+            <div className="mt-4 flex flex-wrap gap-2">
+              {["Fake photos", "Off-platform payment", "Too good to be true", "No lease doc", "Harassment"].map((r) => (
+                <span key={r} className="rounded-full bg-background/70 border border-border px-3 py-1 text-xs font-medium text-foreground">
+                  {r}
+                </span>
+              ))}
+            </div>
           </div>
           <button className="inline-flex items-center gap-2 rounded-full bg-foreground text-background h-12 px-6 text-sm font-medium self-start md:self-auto">
             Report a listing
