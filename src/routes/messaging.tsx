@@ -85,8 +85,22 @@ function Messaging() {
               ))}
             </div>
 
+            {/* Quick actions */}
+            <div className="px-4 py-2 border-t border-border bg-cream/30 flex gap-2 overflow-x-auto">
+              {["📅 Schedule tour", "📄 Share lease", "💸 Send deposit", "📍 Share address"].map((q) => (
+                <button key={q} className="shrink-0 rounded-full border border-border bg-background px-3 h-8 text-xs font-medium text-foreground hover:border-primary hover:text-primary transition-colors">
+                  {q}
+                </button>
+              ))}
+            </div>
+
             {/* Input */}
             <div className="p-4 border-t border-border bg-background flex items-center gap-2">
+              <button className="h-10 w-10 rounded-full hover:bg-muted flex items-center justify-center text-muted-foreground" aria-label="Attach">
+                <svg className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="m18.375 12.739-7.693 7.693a4.5 4.5 0 0 1-6.364-6.364l10.94-10.94A3 3 0 1 1 19.5 7.372L8.552 18.32m.009-.01-.01.01m5.699-9.941-7.81 7.81a1.5 1.5 0 0 0 2.112 2.13" />
+                </svg>
+              </button>
               <input
                 placeholder="Write a message…"
                 className="flex-1 h-10 rounded-full bg-muted px-4 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary"
@@ -138,7 +152,34 @@ function Messaging() {
                 <div className="h-full w-1/2 bg-primary rounded-full" />
               </div>
             </div>
+            <div className="mt-5 space-y-2">
+              <button className="w-full rounded-full bg-foreground text-background h-10 text-xs font-semibold">
+                Mark "Deposit sent"
+              </button>
+              <button className="w-full rounded-full border border-border bg-background h-10 text-xs font-medium hover:bg-muted">
+                Export chat & checklist
+              </button>
+            </div>
           </aside>
+        </div>
+      </section>
+
+      {/* Safety tips */}
+      <section className="mx-auto max-w-5xl px-6 pb-16">
+        <div className="rounded-3xl border border-border bg-cream/40 p-6 md:p-8">
+          <h3 className="font-display text-xl font-semibold text-foreground">Stay safe inside the platform</h3>
+          <ul className="mt-4 grid md:grid-cols-3 gap-4 text-sm">
+            {[
+              ["Never pay off-platform", "Venmo/Zelle requests are our #1 fraud signal. Keep it in-app."],
+              ["Tour before you pay", "Use the 'Schedule tour' action — we timestamp it on both sides."],
+              ["Report anything odd", "One tap in any chat alerts our Trust team within 4 hours."],
+            ].map(([t, d]) => (
+              <li key={t} className="rounded-2xl bg-background border border-border p-4">
+                <p className="font-medium text-foreground">{t}</p>
+                <p className="text-muted-foreground text-xs mt-1 leading-relaxed">{d}</p>
+              </li>
+            ))}
+          </ul>
         </div>
       </section>
 

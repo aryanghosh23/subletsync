@@ -2,9 +2,10 @@ import { createFileRoute } from "@tanstack/react-router";
 import { SiteNav } from "@/components/site-nav";
 import { SiteFooter } from "@/components/site-footer";
 import { ListingCard } from "@/components/listing-card";
-import listing1 from "@/assets/listing-1.jpg";
-import listing2 from "@/assets/listing-2.jpg";
-import listing3 from "@/assets/listing-3.jpg";
+import listing1 from "@/assets/building-northside.jpg";
+import listing2 from "@/assets/building-waterview.jpg";
+import listing3 from "@/assets/building-university-village.jpg";
+import listing4 from "@/assets/building-northside-loft.jpg";
 
 export const Route = createFileRoute("/filters")({
   component: Filters,
@@ -123,6 +124,46 @@ function Filters() {
                 </div>
               </div>
 
+              <div>
+                <p className="text-xs uppercase tracking-wider text-muted-foreground font-medium mb-3">Distance from UTD</p>
+                <div className="rounded-lg border border-border bg-background px-3 py-2 text-sm font-medium text-foreground flex items-center justify-between">
+                  <span>Within 1 mile</span>
+                  <span className="text-xs text-muted-foreground">walk/bike</span>
+                </div>
+                <div className="mt-3 flex flex-wrap gap-2">
+                  <Toggle label="Walk ≤ 10 min" active />
+                  <Toggle label="Bike ≤ 5 min" />
+                  <Toggle label="Comet Cruiser" active />
+                </div>
+              </div>
+
+              <div>
+                <p className="text-xs uppercase tracking-wider text-muted-foreground font-medium mb-3">Verification level</p>
+                <div className="space-y-2">
+                  {[
+                    { t: "Verified student (.edu)", on: true },
+                    { t: "Lease on file", on: true },
+                    { t: "ID manually reviewed", on: true },
+                    { t: "Previous peer reviews", on: false },
+                  ].map((v) => (
+                    <label key={v.t} className="flex items-center gap-2.5 text-sm text-foreground cursor-pointer">
+                      <input type="checkbox" defaultChecked={v.on} className="accent-primary h-4 w-4" />
+                      {v.t}
+                    </label>
+                  ))}
+                </div>
+              </div>
+
+              <div>
+                <p className="text-xs uppercase tracking-wider text-muted-foreground font-medium mb-3">Gender preference</p>
+                <div className="flex flex-wrap gap-2">
+                  <Toggle label="Any" active />
+                  <Toggle label="Women only" />
+                  <Toggle label="Men only" />
+                </div>
+                <p className="mt-2 text-[11px] text-muted-foreground">Posters can opt in to a same-gender roommate preference.</p>
+              </div>
+
               <button className="w-full rounded-full bg-primary text-primary-foreground h-11 text-sm font-semibold hover:bg-primary/90 transition-colors">
                 Apply · 12 results
               </button>
@@ -169,7 +210,7 @@ function Filters() {
                 badges={["Roommate", "Verified"]}
               />
               <ListingCard
-                image={listing1}
+                image={listing4}
                 title="Bright loft, walk to UTD"
                 location="Northside · 0.5 mi"
                 price="$735"
