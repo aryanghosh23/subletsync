@@ -2,10 +2,10 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { SiteNav } from "@/components/site-nav";
 import { SiteFooter } from "@/components/site-footer";
 import { ListingCard } from "@/components/listing-card";
-import heroImg from "@/assets/hero-apartment.jpg";
-import listing1 from "@/assets/listing-1.jpg";
-import listing2 from "@/assets/listing-2.jpg";
-import listing3 from "@/assets/listing-3.jpg";
+import heroImg from "@/assets/building-northside.jpg";
+import listing1 from "@/assets/building-northside.jpg";
+import listing2 from "@/assets/building-waterview.jpg";
+import listing3 from "@/assets/building-university-village.jpg";
 
 export const Route = createFileRoute("/")({
   component: Index,
@@ -82,7 +82,7 @@ function Index() {
             <div className="relative rounded-3xl overflow-hidden shadow-[var(--shadow-lift)] aspect-[4/5] md:aspect-[5/6]">
               <img
                 src={heroImg}
-                alt="Sunlit student apartment with a desk, plants, and warm light"
+                alt="Modern student apartment building at dusk, near UT Dallas in Richardson, Texas"
                 width={1280}
                 height={960}
                 className="h-full w-full object-cover"
@@ -155,8 +155,8 @@ function Index() {
         <div className="grid md:grid-cols-3 gap-6">
           <ListingCard
             image={listing1}
-            title="Sunny 1BR near Northside"
-            location="Synergy Park · 0.4 mi from UTD"
+            title="Sunny 1BR at Northside"
+            location="Northside · 0.3 mi from UTD"
             price="$780"
             dates="May 15 – Aug 10 · Furnished"
             badges={["Verified student", "Lease on file"]}
@@ -164,8 +164,8 @@ function Index() {
           />
           <ListingCard
             image={listing2}
-            title="Quiet studio with kitchenette"
-            location="Waterview Park · 0.8 mi"
+            title="Quiet studio at The Element"
+            location="Waterview Pkwy · 0.8 mi"
             price="$650"
             dates="Jun 1 – Aug 20 · Flexible"
             badges={["Verified student"]}
@@ -173,7 +173,7 @@ function Index() {
           />
           <ListingCard
             image={listing3}
-            title="Cozy room in 2BR"
+            title="Cozy room at University Village"
             location="University Village · 0.2 mi"
             price="$540"
             dates="May 20 – Aug 5 · Roommate"
