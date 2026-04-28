@@ -137,7 +137,6 @@ export function TutorialModal({ open, onClose }: { open: boolean; onClose: () =>
               </svg>
             </button>
           )}
-          </div>
         </div>
       </div>
     </div>
