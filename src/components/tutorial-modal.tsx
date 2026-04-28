@@ -138,6 +138,7 @@ export function TutorialModal({ open, onClose }: { open: boolean; onClose: () =>
             </button>
           )}
         </div>
+        </div>
       </div>
     </div>
   );
