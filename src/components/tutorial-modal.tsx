@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 
 const STEPS = [
   {
@@ -41,10 +42,15 @@ const STEPS = [
 
 export function TutorialModal({ open, onClose }: { open: boolean; onClose: () => void }) {
   const [i, setI] = useState(0);
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
     if (open) setI(0);
   }, [open]);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -57,19 +63,30 @@ export function TutorialModal({ open, onClose }: { open: boolean; onClose: () =>
     return () => window.removeEventListener("keydown", onKey);
   }, [open, onClose]);
 
-  if (!open) return null;
+  useEffect(() => {
+    if (!open || !mounted) return;
+
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+
+    return () => {
+      document.body.style.overflow = previousOverflow;
+    };
+  }, [open, mounted]);
+
+  if (!open || !mounted) return null;
   const step = STEPS[i];
   const isLast = i === STEPS.length - 1;
 
-  return (
+  return createPortal(
     <div
-      className="fixed inset-0 z-50 bg-foreground/40 backdrop-blur-sm animate-in fade-in"
+      className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-foreground/40 p-4 backdrop-blur-sm animate-in fade-in"
       onClick={onClose}
       role="dialog"
       aria-modal="true"
     >
       <div
-        className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[calc(100%-2rem)] max-w-lg max-h-[calc(100vh-2rem)] overflow-y-auto rounded-3xl bg-card shadow-[var(--shadow-lift)]"
+        className="relative my-auto w-full max-w-lg max-h-[calc(100vh-2rem)] overflow-y-auto rounded-3xl bg-card shadow-[var(--shadow-lift)]"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="relative">
@@ -140,6 +157,7 @@ export function TutorialModal({ open, onClose }: { open: boolean; onClose: () =>
         </div>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 }
