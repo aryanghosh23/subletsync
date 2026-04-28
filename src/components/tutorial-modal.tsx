@@ -63,16 +63,16 @@ export function TutorialModal({ open, onClose }: { open: boolean; onClose: () =>
 
   return (
     <div
-      className="fixed inset-0 z-50 overflow-y-auto bg-foreground/40 backdrop-blur-sm animate-in fade-in"
+      className="fixed inset-0 z-50 bg-foreground/40 backdrop-blur-sm animate-in fade-in"
       onClick={onClose}
       role="dialog"
       aria-modal="true"
     >
-      <div className="min-h-full flex items-center justify-center p-4 py-8">
-        <div
-          className="relative w-full max-w-lg rounded-3xl bg-card shadow-[var(--shadow-lift)] overflow-hidden my-auto"
-          onClick={(e) => e.stopPropagation()}
-        >
+      <div
+        className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[calc(100%-2rem)] max-w-lg max-h-[calc(100vh-2rem)] overflow-y-auto rounded-3xl bg-card shadow-[var(--shadow-lift)]"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="relative">
         <button
           onClick={onClose}
           aria-label="Close tutorial"
