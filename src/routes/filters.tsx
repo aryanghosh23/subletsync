@@ -85,7 +85,14 @@ function useToggleSet(initial: string[]) {
       return next;
     });
   };
-  return { has: (k: string) => set.has(k), toggle };
+  const clear = () => setSet(new Set());
+  return {
+    has: (k: string) => set.has(k),
+    toggle,
+    clear,
+    size: () => set.size,
+    values: () => Array.from(set),
+  };
 }
 
 const ALL_LISTINGS = [
