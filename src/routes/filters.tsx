@@ -88,6 +88,13 @@ function useToggleSet(initial: string[]) {
   return { has: (k: string) => set.has(k), toggle };
 }
 
+const ALL_LISTINGS = [
+  { id: 1, image: "listing1", title: "Sunny 1BR near Northside", location: "Synergy Park · 0.4 mi", price: "$720", priceNum: 720, dates: "May 15 – Aug 10", badges: ["Furnished", "Parking"], distance: 0.4, lease: "Summer only", amenities: ["Furnished", "Parking"], roommate: "Solo", verified: true },
+  { id: 2, image: "listing2", title: "Quiet studio, kitchenette", location: "Waterview · 0.8 mi", price: "$680", priceNum: 680, dates: "May 18 – Aug 15", badges: ["Furnished", "Verified"], distance: 0.8, lease: "Summer only", amenities: ["Furnished"], roommate: "Solo", verified: true },
+  { id: 3, image: "listing3", title: "Room in friendly 2BR", location: "University Village · 0.2 mi", price: "$640", priceNum: 640, dates: "May 20 – Aug 5", badges: ["Roommate", "Verified"], distance: 0.2, lease: "Short-term", amenities: ["Furnished"], roommate: "With roommate", verified: true },
+  { id: 4, image: "listing4", title: "Bright loft, walk to UTD", location: "Northside · 0.5 mi", price: "$735", priceNum: 735, dates: "Jun 1 – Aug 20", badges: ["Furnished"], distance: 0.5, lease: "Partial semester", amenities: ["Furnished", "In-unit laundry"], roommate: "Solo", verified: false },
+];
+
 function Filters() {
   const [moveIn, setMoveIn] = useState<Date | undefined>(new Date(2026, 4, 15));
   const [moveOut, setMoveOut] = useState<Date | undefined>(new Date(2026, 7, 10));
@@ -100,7 +107,36 @@ function Filters() {
   const roommate = useToggleSet(["With roommate", "Quiet hours"]);
   const transit = useToggleSet(["Walk ≤ 10 min", "Comet Cruiser"]);
   const verification = useToggleSet(["Verified student (.edu)", "Lease on file", "ID manually reviewed"]);
+  const propertyType = useToggleSet(["Apartment"]);
+  const bedrooms = useToggleSet(["1 BR"]);
+  const bathrooms = useToggleSet(["1 BA"]);
+  const vibe = useToggleSet([]);
   const [gender, setGender] = useState("Any");
+  const [sort, setSort] = useState("Best fit");
+  const [sortOpen, setSortOpen] = useState(false);
+
+  const imageMap: Record<string, string> = { listing1, listing2, listing3, listing4 };
+
+  // Live filtering
+  const filtered = ALL_LISTINGS.filter((l) => {
+    if (l.priceNum < budget[0] || l.priceNum > budget[1]) return false;
+    if (l.distance > distance) return false;
+    if (amenities.size() > 0 && !Array.from(amenities.values()).some((a) => l.amenities.includes(a))) {
+      // require at least one selected amenity to match
+      return false;
+    }
+    return true;
+  });
+
+  const sorted = [...filtered].sort((a, b) => {
+    if (sort === "Price: low to high") return a.priceNum - b.priceNum;
+    if (sort === "Price: high to low") return b.priceNum - a.priceNum;
+    if (sort === "Closest to UTD") return a.distance - b.distance;
+    return 0;
+  });
+
+  const [applied, setApplied] = useState(false);
+  const resultsCount = sorted.length;
 
   const reset = () => {
     setMoveIn(undefined);
@@ -109,6 +145,16 @@ function Filters() {
     setBudget([400, 1200]);
     setDistance(3);
     setGender("Any");
+    setApplied(false);
+    lease.clear();
+    amenities.clear();
+    roommate.clear();
+    transit.clear();
+    verification.clear();
+    propertyType.clear();
+    bedrooms.clear();
+    bathrooms.clear();
+    vibe.clear();
   };
 
   return (
