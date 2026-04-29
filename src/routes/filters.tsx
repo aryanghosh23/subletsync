@@ -85,8 +85,22 @@ function useToggleSet(initial: string[]) {
       return next;
     });
   };
-  return { has: (k: string) => set.has(k), toggle };
+  const clear = () => setSet(new Set());
+  return {
+    has: (k: string) => set.has(k),
+    toggle,
+    clear,
+    size: () => set.size,
+    values: () => Array.from(set),
+  };
 }
+
+const ALL_LISTINGS = [
+  { id: 1, image: "listing1", title: "Sunny 1BR near Northside", location: "Synergy Park · 0.4 mi", price: "$720", priceNum: 720, dates: "May 15 – Aug 10", badges: ["Furnished", "Parking"], distance: 0.4, lease: "Summer only", amenities: ["Furnished", "Parking"], roommate: "Solo", verified: true },
+  { id: 2, image: "listing2", title: "Quiet studio, kitchenette", location: "Waterview · 0.8 mi", price: "$680", priceNum: 680, dates: "May 18 – Aug 15", badges: ["Furnished", "Verified"], distance: 0.8, lease: "Summer only", amenities: ["Furnished"], roommate: "Solo", verified: true },
+  { id: 3, image: "listing3", title: "Room in friendly 2BR", location: "University Village · 0.2 mi", price: "$640", priceNum: 640, dates: "May 20 – Aug 5", badges: ["Roommate", "Verified"], distance: 0.2, lease: "Short-term", amenities: ["Furnished"], roommate: "With roommate", verified: true },
+  { id: 4, image: "listing4", title: "Bright loft, walk to UTD", location: "Northside · 0.5 mi", price: "$735", priceNum: 735, dates: "Jun 1 – Aug 20", badges: ["Furnished"], distance: 0.5, lease: "Partial semester", amenities: ["Furnished", "In-unit laundry"], roommate: "Solo", verified: false },
+];
 
 function Filters() {
   const [moveIn, setMoveIn] = useState<Date | undefined>(new Date(2026, 4, 15));
@@ -100,7 +114,36 @@ function Filters() {
   const roommate = useToggleSet(["With roommate", "Quiet hours"]);
   const transit = useToggleSet(["Walk ≤ 10 min", "Comet Cruiser"]);
   const verification = useToggleSet(["Verified student (.edu)", "Lease on file", "ID manually reviewed"]);
+  const propertyType = useToggleSet(["Apartment"]);
+  const bedrooms = useToggleSet(["1 BR"]);
+  const bathrooms = useToggleSet(["1 BA"]);
+  const vibe = useToggleSet([]);
   const [gender, setGender] = useState("Any");
+  const [sort, setSort] = useState("Best fit");
+  const [sortOpen, setSortOpen] = useState(false);
+
+  const imageMap: Record<string, string> = { listing1, listing2, listing3, listing4 };
+
+  // Live filtering
+  const filtered = ALL_LISTINGS.filter((l) => {
+    if (l.priceNum < budget[0] || l.priceNum > budget[1]) return false;
+    if (l.distance > distance) return false;
+    if (amenities.size() > 0 && !Array.from(amenities.values()).some((a) => l.amenities.includes(a))) {
+      // require at least one selected amenity to match
+      return false;
+    }
+    return true;
+  });
+
+  const sorted = [...filtered].sort((a, b) => {
+    if (sort === "Price: low to high") return a.priceNum - b.priceNum;
+    if (sort === "Price: high to low") return b.priceNum - a.priceNum;
+    if (sort === "Closest to UTD") return a.distance - b.distance;
+    return 0;
+  });
+
+  const [applied, setApplied] = useState(false);
+  const resultsCount = sorted.length;
 
   const reset = () => {
     setMoveIn(undefined);
@@ -109,6 +152,16 @@ function Filters() {
     setBudget([400, 1200]);
     setDistance(3);
     setGender("Any");
+    setApplied(false);
+    lease.clear();
+    amenities.clear();
+    roommate.clear();
+    transit.clear();
+    verification.clear();
+    propertyType.clear();
+    bedrooms.clear();
+    bathrooms.clear();
+    vibe.clear();
   };
 
   return (
@@ -240,6 +293,42 @@ function Filters() {
               </div>
 
               <div>
+                <p className="text-xs uppercase tracking-wider text-muted-foreground font-medium mb-3">Property type</p>
+                <div className="flex flex-wrap gap-2">
+                  {["Apartment", "House", "Studio", "Loft", "Townhome"].map((l) => (
+                    <Toggle key={l} label={l} active={propertyType.has(l)} onClick={() => propertyType.toggle(l)} />
+                  ))}
+                </div>
+              </div>
+
+              <div>
+                <p className="text-xs uppercase tracking-wider text-muted-foreground font-medium mb-3">Bedrooms</p>
+                <div className="flex flex-wrap gap-2">
+                  {["Studio", "1 BR", "2 BR", "3 BR", "4+ BR"].map((l) => (
+                    <Toggle key={l} label={l} active={bedrooms.has(l)} onClick={() => bedrooms.toggle(l)} />
+                  ))}
+                </div>
+              </div>
+
+              <div>
+                <p className="text-xs uppercase tracking-wider text-muted-foreground font-medium mb-3">Bathrooms</p>
+                <div className="flex flex-wrap gap-2">
+                  {["1 BA", "1.5 BA", "2 BA", "2+ BA"].map((l) => (
+                    <Toggle key={l} label={l} active={bathrooms.has(l)} onClick={() => bathrooms.toggle(l)} />
+                  ))}
+                </div>
+              </div>
+
+              <div>
+                <p className="text-xs uppercase tracking-wider text-muted-foreground font-medium mb-3">Vibe</p>
+                <div className="flex flex-wrap gap-2">
+                  {["Quiet & studious", "Social", "Early bird", "Night owl", "Pet household", "Smoke-free"].map((l) => (
+                    <Toggle key={l} label={l} active={vibe.has(l)} onClick={() => vibe.toggle(l)} />
+                  ))}
+                </div>
+              </div>
+
+              <div>
                 <p className="text-xs uppercase tracking-wider text-muted-foreground font-medium mb-3">Verification level</p>
                 <div className="space-y-2">
                   {[
@@ -271,59 +360,68 @@ function Filters() {
                 <p className="mt-2 text-[11px] text-muted-foreground">Posters can opt in to a same-gender roommate preference.</p>
               </div>
 
-              <Button className="w-full rounded-full h-11 text-sm font-semibold">
-                Apply · 12 results
+              <Button
+                onClick={() => setApplied(true)}
+                className="w-full rounded-full h-11 text-sm font-semibold"
+              >
+                Apply · {resultsCount} result{resultsCount === 1 ? "" : "s"}
               </Button>
+              {applied && (
+                <p className="text-center text-xs text-primary font-medium -mt-2">
+                  ✓ Filters applied
+                </p>
+              )}
             </div>
           </aside>
 
           {/* Results */}
           <div>
-            <div className="flex items-center justify-between mb-6">
+            <div className="flex items-center justify-between mb-6 gap-3 flex-wrap">
               <p className="text-sm text-muted-foreground">
-                <span className="text-foreground font-medium">12 listings</span> match your filters
+                <span className="text-foreground font-medium">{resultsCount} listing{resultsCount === 1 ? "" : "s"}</span> match your filters
               </p>
               <div className="flex items-center gap-2 text-sm text-muted-foreground">
                 Sort
-                <button className="rounded-lg border border-border bg-background px-3 h-9 text-foreground font-medium">
-                  Best fit
-                </button>
+                <Popover open={sortOpen} onOpenChange={setSortOpen}>
+                  <PopoverTrigger asChild>
+                    <button className="rounded-lg border border-border bg-background px-3 h-9 text-foreground font-medium hover:border-foreground transition-colors">
+                      {sort}
+                    </button>
+                  </PopoverTrigger>
+                  <PopoverContent align="end" className="w-52 p-1">
+                    {["Best fit", "Price: low to high", "Price: high to low", "Closest to UTD"].map((s) => (
+                      <button
+                        key={s}
+                        onClick={() => { setSort(s); setSortOpen(false); }}
+                        className={`w-full text-left px-3 py-2 rounded-md text-sm hover:bg-accent ${sort === s ? "font-semibold text-foreground" : "text-muted-foreground"}`}
+                      >
+                        {s}
+                      </button>
+                    ))}
+                  </PopoverContent>
+                </Popover>
               </div>
             </div>
 
             <div className="grid sm:grid-cols-2 gap-5">
-              <ListingCard
-                image={listing1}
-                title="Sunny 1BR near Northside"
-                location="Synergy Park · 0.4 mi"
-                price="$720"
-                dates="May 15 – Aug 10"
-                badges={["Furnished", "Parking"]}
-              />
-              <ListingCard
-                image={listing2}
-                title="Quiet studio, kitchenette"
-                location="Waterview · 0.8 mi"
-                price="$680"
-                dates="May 18 – Aug 15"
-                badges={["Furnished", "Verified"]}
-              />
-              <ListingCard
-                image={listing3}
-                title="Room in friendly 2BR"
-                location="University Village · 0.2 mi"
-                price="$640"
-                dates="May 20 – Aug 5"
-                badges={["Roommate", "Verified"]}
-              />
-              <ListingCard
-                image={listing4}
-                title="Bright loft, walk to UTD"
-                location="Northside · 0.5 mi"
-                price="$735"
-                dates="Jun 1 – Aug 20"
-                badges={["Furnished"]}
-              />
+              {sorted.map((l) => (
+                <ListingCard
+                  key={l.id}
+                  image={imageMap[l.image]}
+                  title={l.title}
+                  location={l.location}
+                  price={l.price}
+                  dates={l.dates}
+                  badges={l.badges}
+                />
+              ))}
+              {sorted.length === 0 && (
+                <div className="sm:col-span-2 rounded-2xl border border-dashed border-border bg-card p-10 text-center">
+                  <p className="font-display text-lg font-semibold text-foreground">No matches</p>
+                  <p className="mt-1 text-sm text-muted-foreground">Try widening budget or distance, or hit Reset.</p>
+                  <Button onClick={reset} variant="outline" className="mt-4 rounded-full">Reset filters</Button>
+                </div>
+              )}
             </div>
 
             <div className="mt-8 rounded-2xl border border-dashed border-border bg-cream/40 p-5 flex items-start gap-3">
