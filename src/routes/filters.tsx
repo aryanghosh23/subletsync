@@ -128,7 +128,7 @@ function Filters() {
   const filtered = ALL_LISTINGS.filter((l) => {
     if (l.priceNum < budget[0] || l.priceNum > budget[1]) return false;
     if (l.distance > distance) return false;
-    if (amenities.size() > 0 && !Array.from(amenities.values()).some((a) => l.amenities.includes(a))) {
+    if (amenities.size > 0 && !amenities.values.some((a) => l.amenities.includes(a))) {
       // require at least one selected amenity to match
       return false;
     }
