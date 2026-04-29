@@ -90,8 +90,8 @@ function useToggleSet(initial: string[]) {
     has: (k: string) => set.has(k),
     toggle,
     clear,
-    size: () => set.size,
-    values: () => Array.from(set),
+    size: set.size,
+    values: Array.from(set),
   };
 }
 
