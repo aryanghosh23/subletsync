@@ -13,6 +13,7 @@ import { Route as VerifiedRouteImport } from './routes/verified'
 import { Route as SmartMatchingRouteImport } from './routes/smart-matching'
 import { Route as SigninRouteImport } from './routes/signin'
 import { Route as MessagingRouteImport } from './routes/messaging'
+import { Route as MarketplaceRouteImport } from './routes/marketplace'
 import { Route as FraudRouteImport } from './routes/fraud'
 import { Route as FiltersRouteImport } from './routes/filters'
 import { Route as IndexRouteImport } from './routes/index'
@@ -37,6 +38,11 @@ const MessagingRoute = MessagingRouteImport.update({
   path: '/messaging',
   getParentRoute: () => rootRouteImport,
 } as any)
+const MarketplaceRoute = MarketplaceRouteImport.update({
+  id: '/marketplace',
+  path: '/marketplace',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const FraudRoute = FraudRouteImport.update({
   id: '/fraud',
   path: '/fraud',
@@ -57,6 +63,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/filters': typeof FiltersRoute
   '/fraud': typeof FraudRoute
+  '/marketplace': typeof MarketplaceRoute
   '/messaging': typeof MessagingRoute
   '/signin': typeof SigninRoute
   '/smart-matching': typeof SmartMatchingRoute
@@ -66,6 +73,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/filters': typeof FiltersRoute
   '/fraud': typeof FraudRoute
+  '/marketplace': typeof MarketplaceRoute
   '/messaging': typeof MessagingRoute
   '/signin': typeof SigninRoute
   '/smart-matching': typeof SmartMatchingRoute
@@ -76,6 +84,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/filters': typeof FiltersRoute
   '/fraud': typeof FraudRoute
+  '/marketplace': typeof MarketplaceRoute
   '/messaging': typeof MessagingRoute
   '/signin': typeof SigninRoute
   '/smart-matching': typeof SmartMatchingRoute
@@ -87,6 +96,7 @@ export interface FileRouteTypes {
     | '/'
     | '/filters'
     | '/fraud'
+    | '/marketplace'
     | '/messaging'
     | '/signin'
     | '/smart-matching'
@@ -96,6 +106,7 @@ export interface FileRouteTypes {
     | '/'
     | '/filters'
     | '/fraud'
+    | '/marketplace'
     | '/messaging'
     | '/signin'
     | '/smart-matching'
@@ -105,6 +116,7 @@ export interface FileRouteTypes {
     | '/'
     | '/filters'
     | '/fraud'
+    | '/marketplace'
     | '/messaging'
     | '/signin'
     | '/smart-matching'
@@ -115,6 +127,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   FiltersRoute: typeof FiltersRoute
   FraudRoute: typeof FraudRoute
+  MarketplaceRoute: typeof MarketplaceRoute
   MessagingRoute: typeof MessagingRoute
   SigninRoute: typeof SigninRoute
   SmartMatchingRoute: typeof SmartMatchingRoute
@@ -151,6 +164,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MessagingRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/marketplace': {
+      id: '/marketplace'
+      path: '/marketplace'
+      fullPath: '/marketplace'
+      preLoaderRoute: typeof MarketplaceRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/fraud': {
       id: '/fraud'
       path: '/fraud'
@@ -179,6 +199,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   FiltersRoute: FiltersRoute,
   FraudRoute: FraudRoute,
+  MarketplaceRoute: MarketplaceRoute,
   MessagingRoute: MessagingRoute,
   SigninRoute: SigninRoute,
   SmartMatchingRoute: SmartMatchingRoute,
