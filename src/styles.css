@@ -14,7 +14,7 @@
   --radius-4xl: calc(var(--radius) + 16px);
 
   --font-display: "Fraunces", ui-serif, Georgia, serif;
-  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Outfit", ui-sans-serif, system-ui, sans-serif;
 
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -44,6 +44,13 @@
   --shadow-lift: 0 2px 4px oklch(0.2 0.03 160 / 0.05), 0 24px 48px -12px oklch(0.2 0.03 160 / 0.12);
   --gradient-warm: linear-gradient(135deg, oklch(0.97 0.02 80) 0%, oklch(0.96 0.03 150) 100%);
   --gradient-mint: linear-gradient(135deg, oklch(0.88 0.08 165) 0%, oklch(0.78 0.11 175) 100%);
+  --gradient-hero: linear-gradient(
+    125deg,
+    oklch(0.96 0.035 165) 0%,
+    oklch(0.94 0.04 85) 45%,
+    oklch(0.92 0.06 168) 100%
+  );
+  --noise: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
 :root {
@@ -60,9 +67,9 @@
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.22 0.02 160);
 
-  --primary: oklch(0.55 0.11 168);
+  --primary: oklch(0.52 0.14 168);
   --primary-foreground: oklch(0.99 0.01 160);
-  --primary-soft: oklch(0.92 0.05 168);
+  --primary-soft: oklch(0.9 0.06 168);
 
   --secondary: oklch(0.94 0.025 85);
   --secondary-foreground: oklch(0.22 0.02 160);
@@ -109,9 +116,138 @@
     font-feature-settings: "ss01", "cv11";
   }
 
-  h1, h2, h3, h4 {
+  h1,
+  h2,
+  h3,
+  h4 {
     font-family: var(--font-display);
     font-feature-settings: "ss01";
     letter-spacing: -0.02em;
+  }
+
+  ::selection {
+    background-color: oklch(0.52 0.14 168 / 0.28);
+    color: var(--foreground);
+  }
+}
+
+.hero-backdrop {
+  background:
+    radial-gradient(ellipse 90% 70% at 15% 15%, oklch(0.72 0.14 168 / 0.24), transparent 52%),
+    radial-gradient(ellipse 70% 55% at 88% 5%, oklch(0.88 0.1 85 / 0.35), transparent 48%),
+    radial-gradient(ellipse 55% 40% at 45% 95%, oklch(0.55 0.1 200 / 0.1), transparent 50%),
+    var(--background);
+}
+
+@keyframes ss-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes ss-kenburns {
+  0% {
+    transform: scale(1) translate(0, 0);
+  }
+  100% {
+    transform: scale(1.12) translate(-2%, -1%);
+  }
+}
+
+@keyframes ss-reveal-up {
+  from {
+    opacity: 0;
+    transform: translateY(1.25rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes ss-orbit {
+  0% {
+    transform: rotate(0deg) scale(1);
+  }
+  50% {
+    transform: rotate(180deg) scale(1.05);
+  }
+  100% {
+    transform: rotate(360deg) scale(1);
+  }
+}
+
+@keyframes ss-shimmer {
+  0% {
+    background-position: 200% center;
+  }
+  100% {
+    background-position: -200% center;
+  }
+}
+
+@keyframes ss-pulse-glow {
+  0%,
+  100% {
+    opacity: 0.45;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.75;
+    transform: scale(1.06);
+  }
+}
+
+.animate-ss-float {
+  animation: ss-float 5.5s ease-in-out infinite;
+}
+
+.animate-ss-float-slow {
+  animation: ss-float 8s ease-in-out infinite;
+}
+
+.animate-ss-kenburns {
+  animation: ss-kenburns 26s ease-in-out infinite alternate;
+}
+
+.animate-ss-reveal {
+  animation: ss-reveal-up 0.9s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.animate-ss-orbit {
+  animation: ss-orbit 42s linear infinite;
+}
+
+.animate-ss-pulse-glow {
+  animation: ss-pulse-glow 6s ease-in-out infinite;
+}
+
+.btn-shimmer {
+  background: linear-gradient(
+    105deg,
+    var(--foreground) 0%,
+    oklch(0.35 0.05 168) 40%,
+    var(--foreground) 80%
+  );
+  background-size: 200% auto;
+}
+
+.btn-shimmer:hover {
+  animation: ss-shimmer 2.2s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-ss-float,
+  .animate-ss-float-slow,
+  .animate-ss-kenburns,
+  .animate-ss-reveal,
+  .animate-ss-orbit,
+  .animate-ss-pulse-glow,
+  .btn-shimmer:hover {
+    animation: none !important;
   }
 }
