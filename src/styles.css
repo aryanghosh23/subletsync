@@ -14,7 +14,7 @@
   --radius-4xl: calc(var(--radius) + 16px);
 
   --font-display: "Fraunces", ui-serif, Georgia, serif;
-  --font-sans: "Outfit", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Inter", "Outfit", ui-sans-serif, system-ui, sans-serif;
 
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -240,14 +240,98 @@
   animation: ss-shimmer 2.2s linear infinite;
 }
 
+.landing-closer {
+  background: linear-gradient(165deg, oklch(0.16 0.02 160) 0%, oklch(0.22 0.05 168) 100%);
+  border: 1px solid oklch(0.42 0.08 168 / 0.35);
+  box-shadow:
+    0 0 0 1px oklch(1 0 0 / 0.06) inset,
+    0 40px 80px -30px oklch(0.1 0.05 168 / 0.5);
+}
+
+.landing-hero-mesh {
+  background:
+    radial-gradient(ellipse 95% 75% at 50% -25%, oklch(0.52 0.14 168 / 0.2), transparent 58%),
+    radial-gradient(ellipse 55% 45% at 105% 40%, oklch(0.88 0.1 85 / 0.22), transparent 52%),
+    radial-gradient(ellipse 45% 35% at -5% 80%, oklch(0.65 0.1 200 / 0.1), transparent 50%),
+    var(--background);
+  background-size: 130% 130%;
+  animation: ss-mesh-shift 24s ease-in-out infinite alternate;
+}
+
+@keyframes ss-mesh-shift {
+  0% {
+    background-position: 0% 40%;
+  }
+  100% {
+    background-position: 100% 60%;
+  }
+}
+
+.landing-text-gradient {
+  background: linear-gradient(
+    100deg,
+    oklch(0.45 0.14 168) 10%,
+    oklch(0.58 0.13 175) 45%,
+    oklch(0.42 0.12 168) 90%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.landing-cta-primary {
+  background: linear-gradient(135deg, oklch(0.48 0.15 168) 0%, oklch(0.4 0.12 195) 100%);
+  box-shadow:
+    0 16px 40px -12px oklch(0.48 0.14 168 / 0.55),
+    0 0 0 1px oklch(1 0 0 / 0.12) inset;
+}
+
+.landing-progress-shimmer {
+  background: linear-gradient(90deg, var(--primary), oklch(0.72 0.1 168), var(--primary));
+  background-size: 220% 100%;
+  animation: ss-shimmer-bar 2.6s ease-in-out infinite;
+}
+
+@keyframes ss-shimmer-bar {
+  0%,
+  100% {
+    background-position: 100% 0;
+  }
+  50% {
+    background-position: 0% 0;
+  }
+}
+
+.landing-marquee-mask {
+  mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
+  -webkit-mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
+}
+
+@keyframes ss-marquee {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.landing-marquee-track {
+  animation: ss-marquee 38s linear infinite;
+}
+
 @media (prefers-reduced-motion: reduce) {
-  .animate-ss-float,
-  .animate-ss-float-slow,
-  .animate-ss-kenburns,
-  .animate-ss-reveal,
-  .animate-ss-orbit,
-  .animate-ss-pulse-glow,
-  .btn-shimmer:hover {
+  .landing-hero-mesh,
+  .landing-progress-shimmer,
+  .landing-marquee-track {
     animation: none !important;
+  }
+
+  .landing-marquee-track {
+    transform: translateX(0);
+    justify-content: center;
+    flex-wrap: wrap;
+    width: 100% !important;
+    max-width: 100%;
   }
 }

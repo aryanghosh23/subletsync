@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { SiteNav } from "@/components/site-nav";
 import { SiteFooter } from "@/components/site-footer";
 import { ListingCard } from "@/components/listing-card";
-import { listingThumb } from "@/lib/northside-images";
+import { TOP_MATCH_LISTINGS } from "@/lib/top-match-listings";
 
 export const Route = createFileRoute("/smart-matching")({
   component: SmartMatching,
@@ -30,53 +30,7 @@ function FilterChip({ label, value }: { label: string; value: string }) {
 }
 
 function SmartMatching() {
-  const topFive = [
-    {
-      image: listingThumb.northside1,
-      title: "Sunny 1BR near Northside",
-      location: "Synergy Park · 0.4 mi",
-      price: "$720",
-      dates: "May 15 – Aug 10",
-      badges: ["Verified", "Furnished"] as string[],
-      matchScore: 96,
-    },
-    {
-      image: listingThumb.waterview,
-      title: "Quiet studio, kitchenette",
-      location: "Waterview · 0.8 mi",
-      price: "$680",
-      dates: "May 18 – Aug 15",
-      badges: ["Verified", "Parking"] as string[],
-      matchScore: 91,
-    },
-    {
-      image: listingThumb.uv,
-      title: "Room in friendly 2BR",
-      location: "University Village · 0.2 mi",
-      price: "$640",
-      dates: "May 20 – Aug 5",
-      badges: ["Verified", "Roommate"] as string[],
-      matchScore: 88,
-    },
-    {
-      image: listingThumb.loft,
-      title: "Loft corner · Northside retail",
-      location: "Northside · 0.35 mi",
-      price: "$735",
-      dates: "Jun 1 – Aug 20",
-      badges: ["Verified", "Loft"] as string[],
-      matchScore: 86,
-    },
-    {
-      image: listingThumb.matchExtra1,
-      title: "Summer flex crash pad",
-      location: "Northside · 0.5 mi",
-      price: "$695",
-      dates: "±7 day flex",
-      badges: ["Verified", "Summer"] as string[],
-      matchScore: 84,
-    },
-  ] as const;
+  const topFive = TOP_MATCH_LISTINGS;
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -138,15 +92,31 @@ function SmartMatching() {
 
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {topFive.slice(0, 3).map((l) => (
-            <Link key={l.title} to="/verified" className="group block">
-              <ListingCard {...l} />
+            <Link key={l.id} to="/verified" className="group block">
+              <ListingCard
+                image={l.image}
+                title={l.title}
+                location={l.location}
+                price={l.price}
+                dates={l.dates}
+                badges={[...l.badges]}
+                matchScore={l.matchScore}
+              />
             </Link>
           ))}
         </div>
         <div className="grid sm:grid-cols-2 gap-6 mt-6 max-w-4xl mx-auto">
           {topFive.slice(3).map((l) => (
-            <Link key={l.title} to="/verified" className="group block">
-              <ListingCard {...l} />
+            <Link key={l.id} to="/verified" className="group block">
+              <ListingCard
+                image={l.image}
+                title={l.title}
+                location={l.location}
+                price={l.price}
+                dates={l.dates}
+                badges={[...l.badges]}
+                matchScore={l.matchScore}
+              />
             </Link>
           ))}
         </div>
