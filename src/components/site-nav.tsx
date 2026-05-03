@@ -2,6 +2,7 @@ import { Link, useRouterState } from "@tanstack/react-router";
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { Bell, Menu } from "lucide-react";
+import { BrandAnimatedMark } from "@/components/brand-animated-mark";
 import { TutorialModal } from "@/components/tutorial-modal";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
@@ -31,12 +32,10 @@ export function SiteNav() {
     <header className="sticky top-0 z-50 border-b border-white/15 bg-background/55 shadow-[0_1px_0_oklch(1_0_0/0.06)] backdrop-blur-2xl supports-[backdrop-filter]:bg-background/45">
       <nav className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-4 px-6">
         <Link to="/" className="group flex shrink-0 items-center gap-2">
-          <span className="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-primary font-sans text-lg font-bold text-primary-foreground shadow-md shadow-primary/25 ring-1 ring-white/20">
-            s.
-          </span>
           <span className="font-sans text-xl font-bold tracking-tight text-foreground">
             SubletSync
           </span>
+          <BrandAnimatedMark className="h-8 w-8" />
         </Link>
 
         <div className="relative hidden items-center gap-1 rounded-full border border-border/40 bg-card/30 p-1 backdrop-blur-xl md:flex">

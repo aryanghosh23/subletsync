@@ -4,6 +4,7 @@ import { MessageCircle, Send, Sparkles, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { fetchAssistantReply } from "@/lib/assistant-client";
 import { FB_MESSENGER_CHAT_URL } from "@/lib/app-config";
 
 type Msg = { role: "user" | "assistant"; text: string };
@@ -59,6 +60,7 @@ function ChatMessage({ role, text }: Msg) {
 export function SyncChatbot() {
   const [open, setOpen] = useState(false);
   const [input, setInput] = useState("");
+  const [loading, setLoading] = useState(false);
   const [msgs, setMsgs] = useState<Msg[]>([
     {
       role: "assistant",
@@ -66,13 +68,32 @@ export function SyncChatbot() {
     },
   ]);
   const endRef = useRef<HTMLDivElement>(null);
+  const assistantEndpointRemote = Boolean(import.meta.env.VITE_ASSISTANT_API_URL?.trim());
 
-  const send = useCallback((raw: string) => {
-    const t = raw.trim();
-    if (!t) return;
-    setMsgs((m) => [...m, { role: "user", text: t }, { role: "assistant", text: replyFor(t) }]);
-    setInput("");
-  }, []);
+  const send = useCallback(
+    async (raw: string) => {
+      const t = raw.trim();
+      if (!t || loading) return;
+
+      const historyBefore = msgs;
+      const userMsg: Msg = { role: "user", text: t };
+      setMsgs((m) => [...m, userMsg]);
+      setInput("");
+      setLoading(true);
+
+      const apiMessages = [...historyBefore, userMsg].map((m) => ({
+        role: m.role,
+        content: m.text,
+      }));
+
+      const fromApi = await fetchAssistantReply(apiMessages);
+      const replyText = fromApi ?? replyFor(t);
+
+      setMsgs((m) => [...m, { role: "assistant", text: replyText }]);
+      setLoading(false);
+    },
+    [loading, msgs],
+  );
 
   useEffect(() => {
     endRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -89,7 +110,9 @@ export function SyncChatbot() {
             <div className="min-w-0 flex-1">
               <p className="font-display text-sm font-semibold text-foreground">Campus assistant</p>
               <p className="text-[11px] text-muted-foreground">
-                Verified answers · demo knowledge base
+                {assistantEndpointRemote
+                  ? "Using your VITE_ASSISTANT_API_URL · errors show in chat if the API fails"
+                  : "Dev: AI via /api/chat + OPENAI_API_KEY. If you only see generic replies, check quota/billing at platform.openai.com."}
               </p>
             </div>
             <Button
@@ -113,11 +136,12 @@ export function SyncChatbot() {
           </ScrollArea>
 
           <div className="flex flex-wrap gap-1.5 border-t border-border/60 bg-cream/30 px-3 py-2">
-            {QUICK.map((q) => (
+              {QUICK.map((q) => (
               <button
                 key={q}
                 type="button"
-                onClick={() => send(q)}
+                disabled={loading}
+                onClick={() => void send(q)}
                 className="rounded-full border border-border bg-background/90 px-2.5 py-1 text-[11px] font-medium text-foreground hover:border-primary hover:text-primary transition-colors"
               >
                 {q}
@@ -129,12 +153,13 @@ export function SyncChatbot() {
             className="flex items-center gap-2 border-t border-border p-3"
             onSubmit={(e) => {
               e.preventDefault();
-              send(input);
+              void send(input);
             }}
           >
             <input
               value={input}
               onChange={(e) => setInput(e.target.value)}
+              disabled={loading}
               placeholder="Ask about verification, matches…"
               className="h-11 flex-1 rounded-full border border-border bg-background px-4 text-sm outline-none ring-primary/30 focus:ring-2"
               aria-label="Message"
@@ -143,6 +168,7 @@ export function SyncChatbot() {
               type="submit"
               size="icon"
               className="h-11 w-11 shrink-0 rounded-full"
+              disabled={loading}
               aria-label="Send"
             >
               <Send className="h-4 w-4" />

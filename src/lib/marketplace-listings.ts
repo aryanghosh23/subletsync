@@ -1,4 +1,4 @@
-import { listingThumb } from "@/lib/northside-images";
+import { listingThumb, northsideGallery } from "@/lib/northside-images";
 
 export type ListingCategory = "studio" | "shared" | "summer" | "northside" | "loft";
 
@@ -15,6 +15,8 @@ export type MarketplaceListing = {
   badges: string[];
   verified: boolean;
   distanceMi: number;
+  /** Approximate map pin (UTD vicinity demo). */
+  position: { lat: number; lng: number };
 };
 
 export const marketplaceListings: MarketplaceListing[] = [
@@ -32,6 +34,7 @@ export const marketplaceListings: MarketplaceListing[] = [
     badges: ["Verified student", "Lease on file"],
     verified: true,
     distanceMi: 0.3,
+    position: { lat: 33.0014, lng: -96.7808 },
   },
   {
     id: 2,
@@ -46,6 +49,7 @@ export const marketplaceListings: MarketplaceListing[] = [
     badges: ["Verified student"],
     verified: true,
     distanceMi: 0.4,
+    position: { lat: 33.0009, lng: -96.7795 },
   },
   {
     id: 3,
@@ -60,6 +64,7 @@ export const marketplaceListings: MarketplaceListing[] = [
     badges: ["Verified student", "Lease on file"],
     verified: true,
     distanceMi: 0.2,
+    position: { lat: 32.9884, lng: -96.7441 },
   },
   {
     id: 4,
@@ -75,6 +80,7 @@ export const marketplaceListings: MarketplaceListing[] = [
     badges: ["Verified student"],
     verified: true,
     distanceMi: 0.8,
+    position: { lat: 32.9932, lng: -96.7545 },
   },
   {
     id: 5,
@@ -90,6 +96,7 @@ export const marketplaceListings: MarketplaceListing[] = [
     badges: ["Verified student", "Lease on file"],
     verified: true,
     distanceMi: 0.35,
+    position: { lat: 33.0018, lng: -96.7812 },
   },
   {
     id: 6,
@@ -105,5 +112,97 @@ export const marketplaceListings: MarketplaceListing[] = [
     badges: ["Verified student"],
     verified: true,
     distanceMi: 0.5,
+    position: { lat: 33.0005, lng: -96.7788 },
+  },
+  {
+    id: 7,
+    title: "2BR split near Breckinridge Park",
+    location: "Buckingham Rd · 1.1 mi",
+    price: "$820",
+    priceNum: 820,
+    dates: "Jun 1 – Aug 12",
+    description:
+      "Second bedroom setup as office; quiet complex with pool. Good if you have a car or bike to campus.",
+    image: listingThumb.matchExtra2,
+    categories: ["studio", "summer"],
+    badges: ["Verified student"],
+    verified: true,
+    distanceMi: 1.1,
+    position: { lat: 32.9982, lng: -96.7268 },
+  },
+  {
+    id: 8,
+    title: "Room in 3BR · Cambria Apartments",
+    location: "Renner Rd · 1.35 mi",
+    price: "$495",
+    priceNum: 495,
+    dates: "May 25 – Aug 1",
+    description: "Furnished common areas, in-unit laundry. Roommates are grad students.",
+    image: northsideGallery[5]!.src,
+    categories: ["shared", "summer"],
+    badges: ["Verified student"],
+    verified: true,
+    distanceMi: 1.35,
+    position: { lat: 32.9755, lng: -96.7388 },
+  },
+  {
+    id: 9,
+    title: "CityLine studio · Red line walk",
+    location: "Bush Turnpike · 2.05 mi",
+    price: "$925",
+    priceNum: 925,
+    dates: "May 10 – Aug 20",
+    description: "Corporate-style finish, 24h desk. Slightly higher rent but shorter Uber to legacy employers.",
+    image: northsideGallery[6]!.src,
+    categories: ["studio", "summer"],
+    badges: ["Verified student", "Lease on file"],
+    verified: true,
+    distanceMi: 2.05,
+    position: { lat: 32.9555, lng: -96.702 },
+  },
+  {
+    id: 10,
+    title: "Garage townhome · Telecom Corridor",
+    location: "Coit Rd · 1.65 mi",
+    price: "$1,050",
+    priceNum: 1050,
+    dates: "Jun 5 – Aug 18",
+    description: "Two floors, attached garage, pet-friendly. Fit for co-interns splitting rent.",
+    image: northsideGallery[4]!.src,
+    categories: ["northside", "loft", "summer"],
+    badges: ["Verified student", "Lease on file"],
+    verified: true,
+    distanceMi: 1.65,
+    position: { lat: 32.9682, lng: -96.7688 },
+  },
+  {
+    id: 11,
+    title: "Summer sublet · Arapaho station",
+    location: "Arapaho Rd · 2.45 mi",
+    price: "$610",
+    priceNum: 610,
+    dates: "May 1 – Aug 8",
+    description: "Older build, huge square footage; DART Red Line one block for airport runs.",
+    image: northsideGallery[3]!.src,
+    categories: ["shared", "summer"],
+    badges: ["Verified student"],
+    verified: true,
+    distanceMi: 2.45,
+    position: { lat: 32.942, lng: -96.74 },
+  },
+  {
+    id: 12,
+    title: "Furnished 1BR · Galatyn Park",
+    location: "Galatyn Park · 2.75 mi",
+    price: "$890",
+    priceNum: 890,
+    dates: "Jun 10 – Aug 30",
+    description: "Walk to Urban Crust and events; 10-minute drive to UTD during light traffic.",
+    image: northsideGallery[2]!.src,
+    categories: ["studio", "summer", "loft"],
+    badges: ["Verified student"],
+    verified: true,
+    distanceMi: 2.75,
+    position: { lat: 32.9485, lng: -96.709 },
   },
 ];

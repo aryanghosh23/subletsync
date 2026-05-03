@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Slider } from "@/components/ui/slider";
 import { marketplaceListings, type ListingCategory } from "@/lib/marketplace-listings";
+import { MarketplaceBrowseMap } from "@/components/marketplace-browse-map";
 import {
   northsideGallery,
   NORTHSIDE_PROPERTY_URL,
@@ -57,6 +58,19 @@ function Marketplace() {
       return true;
     });
   }, [q, cat, maxPrice, maxDist]);
+
+  const mapExplorePool = useMemo(() => {
+    const needle = q.trim().toLowerCase();
+    const maxDistExplore = 3;
+    return marketplaceListings.filter((l) => {
+      if (l.priceNum > maxPrice) return false;
+      if (l.distanceMi > maxDistExplore) return false;
+      if (cat !== "all" && !l.categories.includes(cat)) return false;
+      if (needle && !`${l.title} ${l.location} ${l.description}`.toLowerCase().includes(needle))
+        return false;
+      return true;
+    });
+  }, [q, cat, maxPrice]);
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -116,17 +130,13 @@ function Marketplace() {
               </div>
             </div>
             {/* Map-style card */}
-            <div className="animate-ss-reveal w-full max-w-md rounded-3xl border border-border/80 bg-card/90 p-5 shadow-[var(--shadow-lift)] backdrop-blur-md">
+            <div className="animate-ss-reveal w-full max-w-xl rounded-3xl border border-border/80 bg-card/90 p-5 shadow-[var(--shadow-lift)] backdrop-blur-md">
               <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground flex items-center gap-1.5">
                 <MapPin className="h-3.5 w-3.5 text-primary" />
-                Map browse · Richardson
+                Live map · Richardson / UTD
               </p>
-              <div className="mt-4 aspect-[16/10] rounded-2xl bg-muted relative overflow-hidden">
-                <div className="absolute inset-0 bg-gradient-to-br from-primary/20 via-transparent to-accent/30" />
-                <div className="absolute top-[28%] left-[42%] h-4 w-4 rounded-full bg-primary shadow-lg ring-4 ring-primary/30 animate-pulse" />
-                <div className="absolute bottom-3 left-3 right-3 rounded-xl bg-background/90 backdrop-blur px-3 py-2 text-[11px] text-muted-foreground">
-                  Pins show verified listings only · tap to open Messenger handoff
-                </div>
+              <div className="mt-4">
+                <MarketplaceBrowseMap listings={filtered} explorePool={mapExplorePool} />
               </div>
             </div>
           </div>

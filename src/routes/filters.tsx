@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { format } from "date-fns";
 import { CalendarIcon } from "lucide-react";
@@ -12,6 +12,10 @@ import { Input } from "@/components/ui/input";
 import { Slider } from "@/components/ui/slider";
 import { cn } from "@/lib/utils";
 import { listingThumb } from "@/lib/northside-images";
+import {
+  generateFilteredDemoListings,
+  type GeneratedFilterListing,
+} from "@/lib/generate-filtered-demo-listings";
 
 export const Route = createFileRoute("/filters")({
   component: Filters,
@@ -186,6 +190,13 @@ const ALL_LISTINGS = [
   },
 ];
 
+type StaticListing = (typeof ALL_LISTINGS)[number];
+
+function listingCardImage(l: StaticListing | GeneratedFilterListing, map: Record<string, string>) {
+  if (l.image.startsWith("http")) return l.image;
+  return map[l.image] ?? listingThumb.northside1;
+}
+
 function Filters() {
   const [moveIn, setMoveIn] = useState<Date | undefined>(new Date(2026, 4, 15));
   const [moveOut, setMoveOut] = useState<Date | undefined>(new Date(2026, 7, 10));
@@ -217,7 +228,11 @@ function Filters() {
     listing4: listingThumb.loft,
   };
 
-  // Live filtering
+  const genBatchRef = useRef(0);
+  const [demoListings, setDemoListings] = useState<GeneratedFilterListing[] | null>(null);
+  const [applied, setApplied] = useState(false);
+
+  // Live filtering (static sample) until user applies — then demo batch replaces results
   const filtered = ALL_LISTINGS.filter((l) => {
     if (l.priceNum < budget[0] || l.priceNum > budget[1]) return false;
     if (l.distance > distance) return false;
@@ -228,17 +243,43 @@ function Filters() {
     return true;
   });
 
-  const sorted = [...filtered].sort((a, b) => {
+  const sourceRows: (StaticListing | GeneratedFilterListing)[] =
+    applied && demoListings !== null ? demoListings : filtered;
+
+  const sorted = [...sourceRows].sort((a, b) => {
     if (sort === "Price: low to high") return a.priceNum - b.priceNum;
     if (sort === "Price: high to low") return b.priceNum - a.priceNum;
     if (sort === "Closest to UTD") return a.distance - b.distance;
     return 0;
   });
 
-  const [applied, setApplied] = useState(false);
   const resultsCount = sorted.length;
 
+  const applyFilters = () => {
+    genBatchRef.current += 1;
+    setDemoListings(
+      generateFilteredDemoListings({
+        budgetMin: budget[0],
+        budgetMax: budget[1],
+        distanceMaxMi: distance,
+        moveIn,
+        moveOut,
+        flexible,
+        amenities: amenities.values(),
+        leaseTypes: lease.values(),
+        roommate: roommate.values(),
+        bedrooms: bedrooms.values(),
+        propertyTypes: propertyType.values(),
+        verification: verification.values(),
+        batch: genBatchRef.current,
+      }),
+    );
+    setApplied(true);
+  };
+
   const reset = () => {
+    genBatchRef.current = 0;
+    setDemoListings(null);
     setMoveIn(undefined);
     setMoveOut(undefined);
     setFlexible(false);
@@ -543,14 +584,15 @@ function Filters() {
               </div>
 
               <Button
-                onClick={() => setApplied(true)}
+                onClick={applyFilters}
                 className="w-full rounded-full h-11 text-sm font-semibold"
               >
-                Apply · {resultsCount} result{resultsCount === 1 ? "" : "s"}
+                {applied ? "Regenerate demo" : "Apply"} · {resultsCount} result
+                {resultsCount === 1 ? "" : "s"}
               </Button>
               {applied && (
                 <p className="text-center text-xs text-primary font-medium -mt-2">
-                  ✓ Filters applied
+                  ✓ Synthetic matches from your filters (demo)
                 </p>
               )}
             </div>
@@ -563,6 +605,7 @@ function Filters() {
                 <span className="text-foreground font-medium">
                   {resultsCount} listing{resultsCount === 1 ? "" : "s"}
                 </span>{" "}
+                {applied && demoListings ? "in this demo batch · " : ""}
                 match your filters
               </p>
               <div className="flex items-center gap-2 text-sm text-muted-foreground">
@@ -594,10 +637,18 @@ function Filters() {
             </div>
 
             <div className="grid sm:grid-cols-2 gap-5">
+              {applied && demoListings ? (
+                <p className="sm:col-span-2 rounded-xl border border-primary/20 bg-primary/5 px-4 py-3 text-xs text-muted-foreground">
+                  <strong className="text-foreground">Test data:</strong> Listings are generated to
+                  fit your budget, distance, dates, and toggles. Each <strong>Apply</strong> or{" "}
+                  <strong>Regenerate demo</strong> creates a new batch (same filters → shuffle with
+                  a new seed). Not real inventory.
+                </p>
+              ) : null}
               {sorted.map((l) => (
                 <ListingCard
                   key={l.id}
-                  image={imageMap[l.image]}
+                  image={listingCardImage(l, imageMap)}
                   title={l.title}
                   location={l.location}
                   price={l.price}

@@ -194,7 +194,7 @@ export function LandingHome() {
                 <div className="pointer-events-none absolute inset-0 z-10 mix-blend-overlay [background-image:var(--noise)] opacity-25" />
                 <img
                   src={NORTHSIDE_HERO}
-                  alt="Northside at UT Dallas — student community"
+                  alt="Northside at UT Dallas — resort-style pool and lounge deck"
                   width={1536}
                   height={1024}
                   className="aspect-[4/5] w-full object-cover sm:aspect-[5/6] md:min-h-[460px]"
